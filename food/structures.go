@@ -5,29 +5,29 @@ import (
 )
 
 type User struct {
-	ID            uuid.UUID
-	Username      string
-	Password      string
-	Email         string
-	FavouriteFood []*Recepies
+	ID            uuid.UUID  `json:"ID"`
+	Username      string     `json:"username"`
+	Password      string     `json:"-"`
+	Email         string     `json:"email"`
+	FavouriteFood []*Recepie `json:"foods"`
 }
 
-type Recepies struct {
+type Recepie struct {
 	ID         uint
 	Name       string
 	Users      []User
 	Produces   []*Produce
-	Appliances []*Appliances
+	Appliances []*Appliance
 }
 
 type Produce struct {
 	ID       uint
 	Name     string
-	Recepies []*Recepies
+	Recepies []*Recepie
 }
 
-type Appliances struct {
+type Appliance struct {
 	ID       uint
 	Name     string
-	Recepies []*Recepies
+	Recepies []*Recepie
 }

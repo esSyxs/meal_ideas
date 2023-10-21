@@ -1,15 +1,17 @@
 package main
 
 import (
+	logger "System/Log"
+	"System/server"
 	"flag"
-	"fmt"
 	"os"
 
 	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
-	Db DBConf `yaml:"DBConf"`
+	Db     DBConf `yaml:"DBConf"`
+	Server Server `yaml:"Server"`
 }
 
 type DBConf struct {
@@ -20,10 +22,13 @@ type DBConf struct {
 	DBName   string `yaml:"DBName"`
 }
 
+type Server struct {
+	Port string `yaml:"Port"`
+}
+
 var Conf Config
 
 var configFlag string
-var createDB bool
 
 func init() {
 	flag.StringVar(&configFlag, "config", "config.yaml", "path to config")
@@ -36,6 +41,7 @@ func main() {
 		panic(err)
 	}
 
+	server.Start(Conf.Server.Port)
 }
 
 func loadConfig() error {
@@ -50,7 +56,7 @@ func loadConfig() error {
 	}
 
 	// remove later
-	fmt.Println(Conf)
+	logger.Default.Println("configuration for debugging", Conf)
 
 	return nil
 }
