@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/go,visualstudiocode,macos,windows,linux
-# Edit at https://www.toptal.com/developers/gitignore?templates=go,visualstudiocode,macos,windows,linux
+# Created by https://www.toptal.com/developers/gitignore/api/windows,go,react,linux,macos
+# Edit at https://www.toptal.com/developers/gitignore?templates=windows,go,react,linux,macos
 
 ### Go ###
 # If you prefer the allow list template instead of the deny list, see community template:
@@ -72,24 +72,21 @@ Temporary Items
 # iCloud generated files
 *.icloud
 
-### VisualStudioCode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
+### react ###
+.DS_*
+*.log
+logs
+**/*.backup.*
+**/*.back.*
 
-# Local History for Visual Studio Code
-.history/
+node_modules
+bower_components
 
-# Built Visual Studio Code Extensions
-*.vsix
+*.sublime*
 
-### VisualStudioCode Patch ###
-# Ignore all local history of files
-.history
-.ionide
+psd
+thumb
+sketch
 
 ### Windows ###
 # Windows thumbnail cache files
@@ -117,4 +114,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/go,visualstudiocode,macos,windows,linux
+# End of https://www.toptal.com/developers/gitignore/api/windows,go,react,linux,macos

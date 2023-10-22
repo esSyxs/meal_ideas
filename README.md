@@ -5,6 +5,10 @@ Requirements:
 
 go version 1.20
 
-Setup:
+Back-end Setup:
 
 `go build` and run the binary
+
+Front-end Setup:
+
+`npm install` and `npm start`
