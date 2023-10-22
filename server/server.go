@@ -3,58 +3,68 @@ package server
 import (
 	logger "System/Log"
 	"System/food"
-	"encoding/json"
+	"System/jwt_token_authorization/controllers"
+	"System/jwt_token_authorization/middlewares"
 	"fmt"
-	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 const idName = "id"
 
 func Start(port string) {
-	r := mux.NewRouter()
+	r := setupRouter()
 
-	r.HandleFunc(fmt.Sprintf("/recipes/{%s}", idName), recpiesGet).Methods(http.MethodGet)
-
-	logger.Default.Println("starting server")
-	http.ListenAndServe(fmt.Sprintf(":%s", port), r)
-	logger.Default.Println("stopping server")
+	r.Run(fmt.Sprintf(":%s", port))
 }
 
-func recpiesGet(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	recepiesID := vars[idName]
-	logger.Default.Printf("got recepie request with id: %s\n", recepiesID)
+// setupRouter sets up the router and adds the routes.
+func setupRouter() *gin.Engine {
+	r := gin.Default()
+	r.Use(cors.Default())
+	r.GET("/", func(c *gin.Context) {
+		c.String(200, "Welcome To This Website")
+	})
+	// Create a new group for the API
+	api := r.Group("/api")
 
-	i, err := strconv.Atoi(recepiesID)
+	public := api.Group("/public")
+	public.POST("/login", controllers.Login)
+	public.POST("/signup", controllers.Signup)
+
+	public.GET(fmt.Sprintf("/recipes/:%s", idName), recpiesGet)
+
+	protected := api.Group("/protected").Use(middlewares.Authz())
+	protected.GET("/profile", controllers.Profile)
+
+	// Return the router
+	return r
+}
+
+func recpiesGet(c *gin.Context) {
+	id := c.Param(idName)
+	logger.Default.Printf("got recepie request with id: %s\n", id)
+
+	i, err := strconv.Atoi(id)
 	if err != nil {
-		logger.Default.Printf("failed to parse recepie id: %s, err: %s\n", recepiesID, err.Error())
-
-		writeJsonRespone(w, http.StatusBadRequest, err.Error())
+		logger.Default.Printf("failed to parse recepie id: %s, err: %s\n", id, err.Error())
+		c.JSON(400, gin.H{
+			"Error": err.Error(),
+		})
+		c.Abort()
 		return
 	}
 
 	rec, err := food.GetRecepie(uint(i))
 	if err != nil {
-		logger.Default.Printf("failed to find recepie id: %s, err: %s\n", recepiesID, err.Error())
-
-		writeJsonRespone(w, http.StatusBadRequest, err.Error())
+		c.JSON(400, gin.H{
+			"Error": err.Error(),
+		})
+		c.Abort()
 		return
 	}
 
-	writeJsonRespone(w, http.StatusOK, rec)
-}
-
-func writeJsonRespone(w http.ResponseWriter, status int, data any) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.WriteHeader(status)
-
-	err := json.NewEncoder(w).Encode(data)
-	if err != nil {
-		//TODO Should log instead of panic
-		panic("There was an error encoding the initialized struct")
-	}
+	c.JSON(200, rec)
 }

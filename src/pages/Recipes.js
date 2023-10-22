@@ -18,7 +18,7 @@ function Recipes() {
 //Function to fetch recipe data from the server
 const fetchRecipesData = async () => {
   try {
-    const response = await axios.get('http://localhost/recipes/2'
+    const response = await axios.get('http://localhost/api/public/recipes/2'
     ); // Modify the URL as needed
     if(response.status === 200){
       const recipeData = response.data;
