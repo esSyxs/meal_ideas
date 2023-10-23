@@ -9,6 +9,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+var Conf Config
+
+var configFlag string
+
 type Config struct {
 	Db     DBConf `yaml:"DBConf"`
 	Server Server `yaml:"Server"`
@@ -25,10 +29,6 @@ type DBConf struct {
 type Server struct {
 	Port string `yaml:"Port"`
 }
-
-var Conf Config
-
-var configFlag string
 
 func init() {
 	flag.StringVar(&configFlag, "config", "config.yaml", "path to config")

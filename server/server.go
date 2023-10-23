@@ -34,7 +34,8 @@ func setupRouter() *gin.Engine {
 	public.POST("/login", controllers.Login)
 	public.POST("/signup", controllers.Signup)
 
-	public.GET(fmt.Sprintf("/recipes/:%s", idName), recpiesGet)
+	public.GET(fmt.Sprintf("/recipes/:%s", idName), recpieGet)
+	public.GET("/recipes", recpiesGet)
 
 	protected := api.Group("/protected").Use(middlewares.Authz())
 	protected.GET("/profile", controllers.Profile)
@@ -44,6 +45,11 @@ func setupRouter() *gin.Engine {
 }
 
 func recpiesGet(c *gin.Context) {
+	logger.Default.Println("got recepies request")
+	c.JSON(200, food.GetRecepies())
+}
+
+func recpieGet(c *gin.Context) {
 	id := c.Param(idName)
 	logger.Default.Printf("got recepie request with id: %s\n", id)
 
