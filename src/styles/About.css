@@ -1,37 +1,38 @@
 .about {
-    width: 100%;
-    height: 90vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .aboutTop {
-    width: 100%;
-    height: 45%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-  }
-  
-  .aboutBottom {
-    display: flex;
-    flex-direction: column;
-    height: 55%;
-    align-items: center;
-    margin-top: 50px;
-  }
-  
-  .aboutBottom p {
-    width: 1200px;
-  }
-  
-  .about .aboutBottom h1 {
-    font-weight: 400;
-    font-size: 70px;
-    color: black;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    transform: translateY(-40px);
-  }
+  width: 100%;
+  height: 70vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.aboutLeft {
+  width: 50%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.aboutRight {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+  margin: 50px;
+  font-family: cursive;
+}
+
+.aboutRight p {
+  width: 700px;
+  text-align: center;
+}
+
+.about .aboutRight h1 {
+  font-weight: 400;
+  font-size: 70px;
+  color: black;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  transform: translateY(-40px);
+}
