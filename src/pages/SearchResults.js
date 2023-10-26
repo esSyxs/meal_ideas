@@ -84,34 +84,34 @@ const getCurrentPageRecipes = () => {
 
       {isLoading && <p className='not-success-search'>Ielādē datus...</p>}
 
-    {error && <p className='not-success-search'>Kļūda: {error.message}</p>}
+      {error && <p className='not-success-search'>Kļūda: {error.message}</p>}
 
-    {!isLoading && !error && (
-      <div className='searchList'>
-        {filteredRecipes.length === 0 ? (
-          <p className='not-success-search'>Neviena recepte netika atrasta.</p>
-        ) : (
-            getCurrentPageRecipes().map((recipe) => (
-              <Link to={`/recipes/${recipe.ID}`} className='searchItem'>
-              <RecipeItem
-                key={recipe.ID}
-                name={recipe.Name}
-                produce={recipe.Produces}
-                appliances={recipe.Appliances}
-              />
-              </Link>
-          ))
-        )}
-      </div>
-    )}
-    {/* Pagination */}
-    <div className='pagination'>
+      {!isLoading && !error && (
+        <div className='searchList'>
+          {filteredRecipes.length === 0 ? (
+            <p className='not-success-search'>Neviena recepte netika atrasta.</p>
+          ) : (
+              getCurrentPageRecipes().map((recipe, key) => (
+                <Link to={`/recipes/${recipe.ID}`} className='searchItem'>
+                <RecipeItem
+                  key={recipe.ID}
+                  name={recipe.Name}
+                  produce={recipe.Produces}
+                  appliances={recipe.Appliances}
+                />
+                </Link>
+            ))
+          )}
+        </div>
+      )}
+      {/* Pagination */}
+      <div className='pagination'>
           {Array.from({length: Math.ceil(filteredRecipes.length / recipesPerPage)}).map((_, index) => (
             <button className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`} key={index} onClick={() => handlePageChange(index + 1)}>
               {index + 1}
             </button>
           ))}
-        </div>
+      </div>
     </div>
   );
 }

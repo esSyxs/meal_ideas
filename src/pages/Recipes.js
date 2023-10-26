@@ -88,3 +88,43 @@ const fetchRecipesData = async () => {
 }
 
 export default Recipes
+
+
+//{RecipesList.map((recipeItem, key) => {
+  //return <div> {recipeItem.name} {recipeItem.produce} </div>
+
+
+  /* {recipeData && recipeData.map((recipeItem, key) => {
+                return (
+                    <RecipeItem 
+                    key={key}
+                    name={recipeItem.Name}
+                    produce={recipeItem.Produces}
+                    appliances={recipeItem.Appliances}
+                    //recipe={recipeItem.recipe}
+                    />
+                )
+            })} */
+
+
+                //produce={recipeData.Produces.map(item => item.Name)}
+                //appliances={recipeData.Appliances.map(item => item.Name)}
+
+
+                /* {
+            recipeData  && (
+              <RecipeItem
+                name={recipeData.Name}
+                produce={recipeData.Produces}
+                appliances={recipeData.Appliances}
+                />
+            )
+          } */
+
+          // Define a state variable for recipe data
+  // const [recipeData, setRecipeData] = useState({
+  //   ID: 2, //default value
+  //   Name: '',
+  //   Produces: [],
+  //   Appliances: [],
+  // });

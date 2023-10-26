@@ -1,0 +1,89 @@
+.filters {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .filters .filterTitle2 {
+    font-family: cursive;
+    font-size: 36px;
+  }
+  
+  .filterList {
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 20px;
+    justify-items: center;
+    place-content: center;
+  }
+
+  .filterItem:link { text-decoration: none; }
+  .filterItem:visited { text-decoration: none; }
+  .filterItem:hover { text-decoration: none; }
+  .filterItem:active { text-decoration: none; }
+
+
+  
+  /* MENU ITEM STYLING */
+  
+  .filterItem {
+    border-radius: 15px;
+    width: 350px;
+    height: 350px;
+    margin: 20px;
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+    color: black;
+    justify-items: center;
+    place-content: center;
+  }
+
+  .filterItem:hover {
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.5);
+    transition: 0.3s ease-in;
+    cursor: pointer;
+  }
+  
+  .filterItem div {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    width: 300px;
+    height: 100px;
+    background-position-x: left;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+  
+  .filterItem h1,
+  .filterItem p {
+    margin-left: 20px;
+  }
+
+  
+  @media only screen and (max-width: 1300px) {
+    .filterList {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  @media only screen and (max-width: 800px) {
+    .filterList {
+      grid-template-columns: 1fr;
+    }
+  }
+
+
+
+  /* recipeitem */
+
+  .rectext{
+    font-weight: bold;
+  }
+
+  .not-success-search{
+    font-size: 25px;
+    padding-bottom: 300px;
+  }

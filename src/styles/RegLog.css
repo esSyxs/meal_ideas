@@ -1,27 +1,7 @@
-.formAll{
+.RegLog{
     display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.formAll h2{
-    font-size: 30px;
-}
-
-.topSide1{
-    order: 1;
-    margin: 20px;
     width: 100%;
-}
-
-.formReg{
-    display: flex;
-    width: 50%;
-    flex-direction: column;
     height: 70vh;
-    margin: 50px auto;
-    position:relative;
-    order:2;
 }
 
 
@@ -35,21 +15,20 @@
     display: flex;
     flex-direction: column;
     width: 50%;
-    height: 80%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .rightSide1{
     height: 80%;
     width: 50%; /* Adjust as needed */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  order: 3; /* Place the button on the right side */
-  padding-top: 100px;
-  padding-left: 50px;
-  font-size: 20px;
-}
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+  }
 
 
 .form-group input{

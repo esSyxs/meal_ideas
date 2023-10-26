@@ -1,7 +1,9 @@
+// SearchBar.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import TuneIcon from '@mui/icons-material/Tune';
 import '../styles/SearchBar.css'
 
 function SearchBar() {
@@ -25,8 +27,13 @@ function SearchBar() {
     }
   };
 
+  const handleFilter = () => {
+    navigate('/results/filter');
+  }
+
   return (
     <div className='search-container' onClick={clearSearch}>
+      <IconButton className='filter-button' onClick={handleFilter}><TuneIcon /></IconButton>
       <input
         type="text"
         placeholder="Ievadi parametrus, atdalot tos ar komatiem"

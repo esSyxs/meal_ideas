@@ -32,48 +32,48 @@ const Login = () => {
   };
 
   return (
-    <div className='formAll'>
-      <h2 className='topSide1'>Pierakstīties</h2>
-      <div className='formReg'>
-      <form className='leftSide1' onSubmit={handleLogin}>
-        <div className='form-group'>
-          <input
-            type="text"
-            placeholder=' '
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
-            required
-            //className={identifier ? 'active' : ''}
-          />
-          <label>E-pasts vai lietotājvārds</label>
-          {/*<label className={identifier ? 'active' : ''}>E-pasts vai lietotājvārds</label>
+
+      <div className='RegLog'>
+        <div className='leftSide1'>
+          <h2>Pierakstīties</h2>
+          <form onSubmit={handleLogin}>
+            <div className='form-group'>
+            <input
+              type="text"
+              placeholder=' '
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              required
+              //className={identifier ? 'active' : ''}
+            />
+            <label>E-pasts vai lietotājvārds</label>
+            {/*<label className={identifier ? 'active' : ''}>E-pasts vai lietotājvārds</label>
         */}
+            </div>
+            <div className='form-group'>
+              <input
+                type="password"
+                placeholder=' '
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                //className={password ? 'active' : ''}
+              />
+              <label>Parole</label>
+              {/*<label className={password ? 'active' : ''}>Parole</label>
+            */}
+            </div>
+            <button type="submit">Pieslēgties</button>
+          </form>
         </div>
-        <div className='form-group'>
-          <input
-            type="password"
-            placeholder=' '
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            //className={password ? 'active' : ''}
-          />
-          <label>Parole</label>
-          {/*<label className={password ? 'active' : ''}>Parole</label>
-        */}</div>
-        <button type="submit">Pieslēgties</button>
-      </form>
+        <div className='rightSide1'>
+        <p> Neesi lietotājs? <br />
+          <button type='button' onClick={() => navigate('/signup')}>
+              Reģistrēties
+          </button>
+        </p>
+        </div>
       </div>
-      <div className='rightSide1'>
-      <p>
-        Neesi lietotājs? 
-        <button type='button' onClick={() => navigate('/signup')}>
-            Reģistrēties
-        </button>
-      </p>
-      </div>
-      
-    </div>
   );
 };
 

@@ -39,68 +39,72 @@ const Register = () => {
   };
 
   return (
-    <div className='formAll'>
-      <h2 className='topSide1'>Reģistrēties</h2>
-      <div className='formReg'>
-      <form  className='leftSide1' onSubmit={handleRegister}>
-        <div className="form-group">
-          <input
-            type="email"
-            placeholder=" "
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            id='email'
-          />
-          <label>E-pasts</label>
+
+    <div className='RegLog'>
+        <div className='leftSide1'>
+          <h2>Reģistrēties</h2>
+          <form onSubmit={handleRegister}>
+          <div className="form-group">
+            <input
+              type="email"
+              placeholder=" "
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              id='email'
+            />
+            <label>E-pasts</label>
+          </div>
+
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder=" "
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              id='username'
+            />
+            <label>Lietotājvārds</label>
+          </div>
+
+          <div className="form-group">
+            <input
+              type="password"
+              placeholder=" "
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              id='password'
+            />
+            <label>Parole</label>
+          </div>
+
+          <div className="form-group">
+            <input
+              type="password"
+              placeholder=" "
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              required
+              id='password-again'
+            />
+            <label>Parole atkārtoti</label>
+          </div>
+
+          <button type="submit">Reģistrēties</button>
+          </form>
         </div>
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder=" "
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            id='username'
-          />
-          <label>Lietotājvārds</label>
+
+        <div className='rightSide1'>
+        <p>Jau ir konts? <br />
+          <button type='button' onClick={() => navigate('/login')}>
+              Pieslēgties
+          </button>
+        </p>
         </div>
-        <div className="form-group">
-          <input
-            type="password"
-            placeholder=" "
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            id='password'
-          />
-          <label>Parole</label>
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
-            placeholder=" "
-            value={passwordConfirm}
-            onChange={(e) => setPasswordConfirm(e.target.value)}
-            required
-            id='password-again'
-          />
-          <label>Parole atkārtoti</label>
-        </div>
-        <button type="submit">Reģistrēties</button>
-      </form>
       </div>
-      
-      <div className='rightSide1'>
-      <p>
-        Jau ir konts? 
-        <button type='button' onClick={() => navigate('/login')}>
-            Pieslēgties
-        </button>
-      </p>
-      </div>
-      
-    </div>
+
   );
 };
 

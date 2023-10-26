@@ -1,5 +1,5 @@
 import React from 'react'
-import BannerImage from '../assets/light_blue.avif'
+import BannerImage from '../assets/par2.jpg'
 import '../styles/About.css'
 
 function About() {
