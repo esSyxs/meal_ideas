@@ -12,7 +12,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const idName = "id"
+const (
+	idName = "id"
+
+	//query_string_keys
+	produceID      = "produce_id"
+	produceMatch   = "produce_match_strict"
+	applianceID    = "appliance_id"
+	applianceMatch = "appliance_match_strict"
+)
 
 func Start(port string) {
 	r := setupRouter()
@@ -46,7 +54,76 @@ func setupRouter() *gin.Engine {
 
 func recpiesGet(c *gin.Context) {
 	logger.Default.Println("got recepies request")
-	c.JSON(200, food.GetRecepies())
+
+	var pMatch, aMatch bool
+	var err error
+
+	query := c.Request.URL.Query()
+	produceIDs := query[produceID]
+	applianceIDs := query[applianceID]
+
+	if len(produceIDs) == 0 && len(applianceIDs) == 0 {
+		c.JSON(200, food.GetRecepies())
+		c.Abort()
+		return
+	}
+
+	produceMatchString := query.Get(produceMatch)
+	applianceMatchString := query.Get(applianceMatch)
+
+	if produceMatchString != "" {
+		pMatch, err = strconv.ParseBool(produceMatchString)
+		if err != nil {
+			c.JSON(400, gin.H{
+				"Error": fmt.Errorf("failed to parse %s, %s", produceMatchString, err.Error()),
+			})
+			c.Abort()
+			return
+		}
+	}
+
+	if applianceMatchString != "" {
+		aMatch, err = strconv.ParseBool(applianceMatchString)
+		if err != nil {
+			c.JSON(400, gin.H{
+				"Error": fmt.Errorf("failed to parse %s, %s", applianceMatchString, err.Error()),
+			})
+			c.Abort()
+			return
+		}
+	}
+
+	var rIDs, aIDs []uint
+
+	for _, id := range applianceIDs {
+		i, err := strconv.Atoi(id)
+		if err != nil {
+			logger.Default.Printf("failed to parse appliance id: %s, err: %s\n", id, err.Error())
+			c.JSON(400, gin.H{
+				"Error": err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		aIDs = append(aIDs, uint(i))
+	}
+
+	for _, id := range produceIDs {
+		i, err := strconv.Atoi(id)
+		if err != nil {
+			logger.Default.Printf("failed to parse produce id: %s, err: %s\n", id, err.Error())
+			c.JSON(400, gin.H{
+				"Error": err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		aIDs = append(rIDs, uint(i))
+	}
+
+	c.JSON(200, filterRecipes(rIDs, aIDs, pMatch, aMatch))
 }
 
 func recpieGet(c *gin.Context) {
@@ -73,4 +150,59 @@ func recpieGet(c *gin.Context) {
 	}
 
 	c.JSON(200, rec)
+}
+
+// database should handle this
+func filterRecipes(pIDs, aIDs []uint, pMatch, aMatch bool) map[uint]*food.Recepie {
+	all := food.GetRecepies()
+
+	out := map[uint]*food.Recepie{}
+
+	for _, r := range all {
+		var tmpP []uint
+		for _, p := range r.Produces {
+			if inSlice(pIDs, p.ID) {
+				tmpP = append(tmpP, p.ID)
+			}
+		}
+
+		if pMatch && len(r.Produces) != len(tmpP) {
+			continue
+		}
+
+		var tmp []uint
+
+		for _, a := range r.Appliances {
+			if inSlice(aIDs, a.ID) {
+				tmp = append(tmp, a.ID)
+			}
+		}
+
+		if aMatch && len(r.Appliances) != len(tmp) {
+			continue
+		}
+
+		switch true {
+		case !aMatch && !pMatch && (len(tmpP) > 1 || len(tmp) > 1):
+			out[r.ID] = r
+		case aMatch && pMatch && len(tmpP) == len(r.Produces) && len(tmp) == len(r.Appliances):
+			out[r.ID] = r
+		case aMatch && len(tmp) == len(r.Appliances) && !pMatch:
+			out[r.ID] = r
+		case pMatch && len(tmp) == len(r.Produces) && !aMatch:
+			out[r.ID] = r
+		}
+	}
+
+	return out
+}
+
+func inSlice(in []uint, match uint) bool {
+	for _, v := range in {
+		if v == match {
+			return true
+		}
+	}
+
+	return false
 }
