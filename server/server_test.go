@@ -59,6 +59,136 @@ func Test_filterRecipes(t *testing.T) {
 			},
 		},
 		{
+			"non_strict_not_all",
+			args{
+				map[uint]*food.Recepie{
+					1: {
+						ID: 1,
+						Produces: []*food.Produce{
+							{ID: 1},
+							{ID: 2},
+							{ID: 3},
+						},
+						Appliances: []*food.Appliance{
+							{ID: 1},
+							{ID: 2},
+							{ID: 3},
+						},
+					},
+					2: {
+						ID: 2,
+						Produces: []*food.Produce{
+							{ID: 4},
+							{ID: 5},
+							{ID: 6},
+						},
+						Appliances: []*food.Appliance{
+							{ID: 4},
+							{ID: 5},
+							{ID: 6},
+						},
+					},
+					3: {
+						ID: 3,
+						Produces: []*food.Produce{
+							{ID: 1},
+							{ID: 4},
+							{ID: 6},
+						},
+						Appliances: []*food.Appliance{
+							{ID: 4},
+							{ID: 5},
+							{ID: 6},
+						},
+					},
+				},
+				[]uint{1, 4},
+				[]uint{},
+				false,
+				false,
+			},
+			map[uint]*food.Recepie{
+				3: {
+					ID: 3,
+					Produces: []*food.Produce{
+						{ID: 1},
+						{ID: 4},
+						{ID: 6},
+					},
+					Appliances: []*food.Appliance{
+						{ID: 4},
+						{ID: 5},
+						{ID: 6},
+					},
+				},
+			},
+		},
+		{
+			"non_strict_not_all",
+			args{
+				map[uint]*food.Recepie{
+					1: {
+						ID: 1,
+						Produces: []*food.Produce{
+							{ID: 1},
+							{ID: 2},
+							{ID: 3},
+						},
+						Appliances: []*food.Appliance{
+							{ID: 1},
+							{ID: 2},
+							{ID: 3},
+						},
+					},
+					2: {
+						ID: 2,
+						Produces: []*food.Produce{
+							{ID: 4},
+							{ID: 5},
+							{ID: 6},
+						},
+						Appliances: []*food.Appliance{
+							{ID: 4},
+							{ID: 5},
+							{ID: 6},
+						},
+					},
+					3: {
+						ID: 3,
+						Produces: []*food.Produce{
+							{ID: 1},
+							{ID: 4},
+							{ID: 6},
+						},
+						Appliances: []*food.Appliance{
+							{ID: 4},
+							{ID: 5},
+							{ID: 6},
+						},
+					},
+				},
+				[]uint{1, 4},
+				[]uint{4},
+				false,
+				false,
+			},
+			map[uint]*food.Recepie{
+				3: {
+					ID: 3,
+					Produces: []*food.Produce{
+						{ID: 1},
+						{ID: 4},
+						{ID: 6},
+					},
+					Appliances: []*food.Appliance{
+						{ID: 4},
+						{ID: 5},
+						{ID: 6},
+					},
+				},
+			},
+		},
+		{
 			"non_strict_multiple",
 			args{
 				map[uint]*food.Recepie{

@@ -96,7 +96,7 @@ func recpiesGet(c *gin.Context) {
 
 	log.Printf("got values: produce ids: %+v, applance ids: %+v, strict produce: %v, strict applance: %v\n", produceIDs, applianceIDs, produceMatchString, applianceMatchString)
 
-	var rIDs, aIDs []uint
+	var pIDs, aIDs []uint
 
 	for _, id := range applianceIDs {
 		i, err := strconv.Atoi(id)
@@ -123,10 +123,10 @@ func recpiesGet(c *gin.Context) {
 			return
 		}
 
-		rIDs = append(rIDs, uint(i))
+		pIDs = append(pIDs, uint(i))
 	}
 
-	c.JSON(200, filterRecipes(food.GetRecepies(), rIDs, aIDs, pMatch, aMatch))
+	c.JSON(200, filterRecipes(food.GetRecepies(), pIDs, aIDs, pMatch, aMatch))
 }
 
 func recpieGet(c *gin.Context) {
@@ -157,12 +157,13 @@ func recpieGet(c *gin.Context) {
 
 // database should handle this
 func filterRecipes(all map[uint]*food.Recepie, pIDs, aIDs []uint, pMatch, aMatch bool) map[uint]*food.Recepie {
-
 	out := map[uint]*food.Recepie{}
-
 	for _, r := range all {
 		var tmpP []uint
+		produceIDs := map[uint]bool{}
+		appliancesIDs := map[uint]bool{}
 		for _, p := range r.Produces {
+			produceIDs[p.ID] = false
 			if inSlice(pIDs, p.ID) {
 				tmpP = append(tmpP, p.ID)
 			}
@@ -175,6 +176,7 @@ func filterRecipes(all map[uint]*food.Recepie, pIDs, aIDs []uint, pMatch, aMatch
 		var tmp []uint
 
 		for _, a := range r.Appliances {
+			appliancesIDs[a.ID] = false
 			if inSlice(aIDs, a.ID) {
 				tmp = append(tmp, a.ID)
 			}
@@ -186,6 +188,31 @@ func filterRecipes(all map[uint]*food.Recepie, pIDs, aIDs []uint, pMatch, aMatch
 
 		switch true {
 		case !aMatch && !pMatch && (len(tmpP) > 0 || len(tmp) > 0):
+			var tmp int
+			for _, id := range pIDs {
+				_, ok := produceIDs[id]
+				if ok {
+					tmp++
+				}
+
+			}
+
+			if len(pIDs) != tmp && len(pIDs) > 0 {
+				continue
+			}
+
+			tmp = 0
+
+			for _, id := range aIDs {
+				_, ok := appliancesIDs[id]
+				if ok {
+					tmp++
+				}
+			}
+
+			if len(aIDs) != tmp && len(aIDs) > 0 {
+				continue
+			}
 
 			out[r.ID] = r
 		case aMatch && pMatch && len(tmpP) == len(r.Produces) && len(tmp) == len(r.Appliances):
