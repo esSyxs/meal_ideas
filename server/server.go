@@ -6,6 +6,7 @@ import (
 	"System/jwt_token_authorization/controllers"
 	"System/jwt_token_authorization/middlewares"
 	"fmt"
+	"log"
 	"strconv"
 
 	"github.com/gin-contrib/cors"
@@ -92,6 +93,8 @@ func recpiesGet(c *gin.Context) {
 			return
 		}
 	}
+
+	log.Panicf("got values: produce ids: %+v, applance ids: %+v, strict produce: %v, strict applance: %v\n", produceIDs, applianceIDs, produceMatchString, applianceMatchString)
 
 	var rIDs, aIDs []uint
 
