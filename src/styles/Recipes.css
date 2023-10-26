@@ -1,62 +1,115 @@
 .recipes {
-    width: 100%;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-  .recipes .recipesTitle {
-    font-family: cursive;
-    font-size: 60px;
-  }
-  
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.recipes .recipesTitle {
+  font-family: cursive;
+  font-size: 60px;
+}
+
+.recipesList {
+  height: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+  justify-items: center;
+  place-content: center;
+}
+
+.recipeItem:link { text-decoration: none; }
+.recipeItem:visited { text-decoration: none; }
+.recipeItem:hover { text-decoration: none; }
+.recipeItem:active { text-decoration: none; }
+
+
+
+/* MENU ITEM STYLING */
+
+.recipeItem {
+  border-radius: 15px;
+  width: 350px;
+  height: 350px;
+  margin: 20px;
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+  color: black;
+  justify-items: center;
+  place-content: center;
+}
+
+.recipeItem:hover {
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.5);
+  transition: 0.3s ease-in;
+  cursor: pointer;
+}
+
+.recipeItem div {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  width: 300px;
+  height: 100px;
+  background-position-x: left;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.recipeItem h1,
+.recipeItem p {
+  margin-left: 20px;
+}
+
+
+@media only screen and (max-width: 1300px) {
   .recipesList {
-    width: 70vw;
-    height: auto;
-    display: flex;
-    grid-template-columns: 1fr 1fr 1fr;
-    place-items: center;
+    grid-template-columns: 1fr 1fr;
   }
-  
-  /* MENU ITEM STYLING */
-  
-  .recipeItem {
-    border-radius: 15px;
-    width: 300px;
-    height: 350px;
-    margin: 20px;
-    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media only screen and (max-width: 800px) {
+  .recipesList {
+    grid-template-columns: 1fr;
   }
-  .recipeItem:hover {
-    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.5);
-    transition: 0.3s ease-in;
-    cursor: pointer;
-  }
-  
-  .recipeItem div {
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    width: 100%;
-    height: 200px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  
-  .recipeItem h1,
-  .recipeItem p {
-    margin-left: 20px;
-  }
-  
-  @media only screen and (max-width: 1300px) {
-    .recipesList {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-  
-  @media only screen and (max-width: 800px) {
-    .recipesList {
-      grid-template-columns: 1fr;
-    }
-  }
+}
+
+
+
+/* recipeitem */
+
+.rectext{
+  font-weight: bold;
+}
+
+
+/* pagination button */
+
+.pagination-button {
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px 20px;
+  margin: 5px; /* To make buttons further apart */
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
+
+  /* Remove underlines and change cursor on hover */
+  text-decoration: none;
+}
+
+.pagination-button:hover {
+  background-color: #5faef3;
+  transform: scale(1.1);
+}
+
+/* Styles for the active (current) page button */
+.pagination-button.active {
+background-color: #1261a6; /* Change the color to your desired color */
+color: #fff; /* Change the text color if needed */
+font-weight: bold; /* Optionally, make the text bold or customize other properties */
+transform: scale(1); /* Reset any transformation on the active button */
+}

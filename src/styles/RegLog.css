@@ -1,0 +1,105 @@
+.formAll{
+    display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.formAll h2{
+    font-size: 30px;
+}
+
+.topSide1{
+    order: 1;
+    margin: 20px;
+    width: 100%;
+}
+
+.formReg{
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    height: 70vh;
+    margin: 50px auto;
+    position:relative;
+    order:2;
+}
+
+
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  
+
+.leftSide1{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 80%;
+}
+
+.rightSide1{
+    height: 80%;
+    width: 50%; /* Adjust as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  order: 3; /* Place the button on the right side */
+  padding-top: 100px;
+  padding-left: 50px;
+  font-size: 20px;
+}
+
+
+.form-group input{
+    border: 2px solid #afbdcf;
+  border-radius: 5px;
+  height: 50px;
+  width:300px;
+  color: #000000;
+  font-size: 20px;
+  padding-left: 20px;
+  box-shadow: none;  
+}
+
+.form-group input:focus + label, .form-group input:valid + label{
+    font-size: 12px;
+  color: #afbdcf;
+  top: -10px;
+  left:10px;
+  background: #ffffff;
+  padding: 0px 5px 0px 5px;
+}
+
+.form-group {width:auto; height:auto; position:relative;
+}
+
+.form-group label {
+    font-size:15px;
+    color: #afbdcf;
+    padding-left: 15px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition:0.2s ease all; 
+    -moz-transition:0.2s ease all; 
+    -webkit-transition:0.2s ease all;
+    pointer-events: none;
+  
+  }
+
+  .form-group input:focus {outline:none;}
+
+
+  .rightSide1 button, .leftSide1 button{
+    margin-top: 40px;
+    width: 140px;
+    height: 40px;
+    border: none;
+    background-color: #121619;
+    color: whitesmoke;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: cursive;
+  }

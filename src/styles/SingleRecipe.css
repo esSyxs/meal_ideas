@@ -1,0 +1,22 @@
+.recipes1 {
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: cursive;
+  }
+  .recipes1 .recipeTitle1 {
+    font-size: 50px;
+  }
+  
+  .recipes1 .recProduce1, .recAppliances1{
+    font-weight: bold;
+    font-size: 25px;
+    margin: 5px;
+  }
+  .recipes1 .recipeText1{
+    font-size: 20px;
+    margin: 40px;
+  }
