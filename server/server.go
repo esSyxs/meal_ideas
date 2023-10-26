@@ -123,7 +123,7 @@ func recpiesGet(c *gin.Context) {
 		aIDs = append(rIDs, uint(i))
 	}
 
-	c.JSON(200, filterRecipes(rIDs, aIDs, pMatch, aMatch))
+	c.JSON(200, filterRecipes(food.GetRecepies(), rIDs, aIDs, pMatch, aMatch))
 }
 
 func recpieGet(c *gin.Context) {
@@ -153,8 +153,7 @@ func recpieGet(c *gin.Context) {
 }
 
 // database should handle this
-func filterRecipes(pIDs, aIDs []uint, pMatch, aMatch bool) map[uint]*food.Recepie {
-	all := food.GetRecepies()
+func filterRecipes(all map[uint]*food.Recepie, pIDs, aIDs []uint, pMatch, aMatch bool) map[uint]*food.Recepie {
 
 	out := map[uint]*food.Recepie{}
 
@@ -183,13 +182,14 @@ func filterRecipes(pIDs, aIDs []uint, pMatch, aMatch bool) map[uint]*food.Recepi
 		}
 
 		switch true {
-		case !aMatch && !pMatch && (len(tmpP) > 1 || len(tmp) > 1):
+		case !aMatch && !pMatch && (len(tmpP) > 0 || len(tmp) > 0):
+
 			out[r.ID] = r
 		case aMatch && pMatch && len(tmpP) == len(r.Produces) && len(tmp) == len(r.Appliances):
 			out[r.ID] = r
 		case aMatch && len(tmp) == len(r.Appliances) && !pMatch:
 			out[r.ID] = r
-		case pMatch && len(tmp) == len(r.Produces) && !aMatch:
+		case pMatch && len(tmpP) == len(r.Produces) && !aMatch:
 			out[r.ID] = r
 		}
 	}
