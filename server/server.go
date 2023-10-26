@@ -123,7 +123,7 @@ func recpiesGet(c *gin.Context) {
 			return
 		}
 
-		aIDs = append(rIDs, uint(i))
+		rIDs = append(rIDs, uint(i))
 	}
 
 	c.JSON(200, filterRecipes(food.GetRecepies(), rIDs, aIDs, pMatch, aMatch))
