@@ -94,7 +94,7 @@ func recpiesGet(c *gin.Context) {
 		}
 	}
 
-	log.Panicf("got values: produce ids: %+v, applance ids: %+v, strict produce: %v, strict applance: %v\n", produceIDs, applianceIDs, produceMatchString, applianceMatchString)
+	log.Printf("got values: produce ids: %+v, applance ids: %+v, strict produce: %v, strict applance: %v\n", produceIDs, applianceIDs, produceMatchString, applianceMatchString)
 
 	var rIDs, aIDs []uint
 
