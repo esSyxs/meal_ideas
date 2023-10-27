@@ -3,184 +3,174 @@ import axios from 'axios';
 import RecipeItem from '../components/RecipeItem';
 import {Link} from "react-router-dom";
 import '../styles/SearchFilter.css'
+import { useEffect } from 'react';
 
 function SearchFilter() {
   const [produce, setProduce] = useState('');
   const [appliance, setAppliance] = useState('');
   const [produceOnly, setProduceOnly] = useState(false);
   const [applianceOnly, setApplianceOnly] = useState(false);
-  const [produceResults, setProduceResults] = useState([]);
-  const [applianceResults, setApplianceResults] = useState([]);
-  // const [noResultsMessage, setNoResultsMessage] = useState('');
+  const [noResultsMessage, setNoResultsMessage] = useState('');
+  const [resultsMessage, setResultsMessage] = useState('');
+  const [recipesResults, setRecipesResults] = useState([]);
   const [produceIDs, setProduceIDs] = useState([]);
   const [appliancesIDs, setAppliancesIDs] = useState([]);
-  const [recipes, setRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [produceQuery, setProduceQuery] = useState('');
-  const [applianceQuery, setApplianceQuery] = useState('');
+  const [applianceQuery, setApplianceQuery] = useState('')
 
   
 
   const baseURL = 'http://localhost:80/api/public/recipes'
 
+//update state immediately after setting it
+  useEffect(() =>{
+    setProduceQuery(produce)
+    setApplianceQuery(appliance)
+  }, [produce, appliance])
+
+
+
   const handleSearch = async () => {
-    // setNoResultsMessage('');
+
+    setRecipesResults([]);
+    setNoResultsMessage('');
+    setResultsMessage('');
 // Split user input into an array of terms (produces and appliances)
     const produceTerms = produce.split(',').map(term => term.trim());
     const applianceTerms = appliance.split(',').map(term => term.trim());
+
+    console.log('recres before', recipesResults)
 
     setProduceQuery(produce)
     setApplianceQuery(appliance)
 
 
     //get prouduce id
-    const fetchDataProduce = async () => {
+    const fetchData = async () => {
+
       
       // Fetch data based on the searchQuery
-      try {
-      const response = await axios.get('http://localhost/api/public/recipes');
-      // Now you have the data in response.data, which is an object.
-      // You need to convert it to an array of recipes.
-      const recipesArray = Object.values(response.data);
-      setRecipes(recipesArray);
+      if(produce.length > 0 || appliance.length > 0){
+        try {
+            
+            const response = await axios.get('http://localhost/api/public/recipes');
+            // Now you have the data in response.data, which is an object.
+            // You need to convert it to an array of recipes.
+            const recipesArray = Object.values(response.data);
 
-      //
-      const matchingProduceIDs = [];
-      const lowercaseProduceTerms = produceTerms.map(term => term.toLowerCase());
 
-      recipes.forEach((recipe, key) =>{
-        const matchingProdIds = recipe.Produces
-          .filter((prod, key) => lowercaseProduceTerms.includes(prod.Name.toLowerCase()))
-          .map((prod, key) => prod.ID)
+            const matchingProduceIDs = [];
+            const lowercaseProduceTerms = produceTerms.map(term => term.toLowerCase());
+            const matchingApplianceIDs = [];
+            const lowercaseApplianceTerms = applianceTerms.map(term => term.toLowerCase());
+      
+            recipesArray.forEach((recipe, key) =>{
+              if(produce.length > 0){
+                  const matchingProdIds = recipe.Produces
+                  .filter((prod, key) => lowercaseProduceTerms.includes(prod.Name.toLowerCase()))
+                  .map((prod, key) => prod.ID)
+        
+                  matchingProduceIDs.push(...matchingProdIds)
+              }
 
-          matchingProduceIDs.push(...matchingProdIds)
-      })
+              if (appliance.length > 0) {
+                  const matchingApplIds = recipe.Appliances
+                  .filter((appl, key) => lowercaseApplianceTerms.includes(appl.Name.toLowerCase()))
+                  .map((appl, key) => appl.ID)
+        
+                  matchingApplianceIDs.push(...matchingApplIds)
+              }
+      
+              
+            })
+      
+            // Remove duplicate IDs (if any)
+          const uniqueMatchingProduceIDs = [...new Set(matchingProduceIDs)];
+          produceIDs.push(...uniqueMatchingProduceIDs)
+          const uniqueMatchingApplianceIDs = [...new Set(matchingApplianceIDs)];
+          appliancesIDs.push(...uniqueMatchingApplianceIDs)
 
-      // Remove duplicate IDs (if any)
-    const uniqueMatchingProduceIDs = [...new Set(matchingProduceIDs)];
-    produceIDs.push(...uniqueMatchingProduceIDs)
+          setResultsMessage(`Meklēšanas rezultāti "${produceQuery} ${applianceQuery}":`)
+      
+          } catch (error) {
+            console.error('Produce / Appliance ID Error:', error);
+            setError(error);
+          } finally {
+            setIsLoading(false);
+          } 
+      } else{
+        setResultsMessage('')
+      }
+      
+    };//fetchData
 
-    } catch (error) {
-      console.error('Produce ID Error:', error);
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    } 
-    };//fetchDataProduce
+    
 //=======================================================================
 
     // Build your request based on the user's input and checkboxes
 
     // Build and send a GET request for produce
-  if (produce.length > 0) {
-    //get produce ids
-    await fetchDataProduce()
+
+    //get produce/appliance ids
+    await fetchData()
 
     
 //katram id dabū query
-    let produceURL = `${baseURL}?`;
-    produceIDs.forEach(name => {
-      produceURL += `produce_id=${name}&`;
-    });
-    if (produceOnly) {
-      produceURL += 'produce_match_strict=true&';
+
+
+    let sendurl = `${baseURL}?`;
+    console.log('prodlen', produce.length)
+    if(produce.length > 0) {
+        produceIDs.forEach(name => {
+            sendurl += `produce_id=${name}&`;
+          });
+          if (produceOnly) {
+            sendurl += 'produce_match_strict=true&';
+          }
     }
+    console.log('applen', appliance.length)
+    if(appliance.length > 0) {
+        appliancesIDs.forEach(name => {
+            sendurl += `appliance_id=${name}&`;
+          });
+          if (applianceOnly) {
+            sendurl += 'appliance_match_strict=true&';
+          }
+    }
+    
     // Remove the trailing '&' if present
-    if (produceURL.endsWith('&')) {
-      produceURL = produceURL.slice(0, -1);
+    if (sendurl.endsWith('&')) {
+      sendurl = sendurl.slice(0, -1);
     }
 
-    try {
-      const produceResponse = await axios.get(produceURL);
-      // Handle the response for produce here
-      const produceData = Object.values(produceResponse.data);
-      setProduceResults(produceData); // Save the produce results in state
+
+        try {
+            console.log('prodidlen', produceIDs.length)
+            console.log('appIDlen', appliancesIDs.length)
+            if(produceIDs.length > 0 || appliancesIDs.length > 0){
+                const recipesResponse = await axios.get(sendurl);
+                // Handle the response for produce here
+                const recipesData = Object.values(recipesResponse.data);
+                setRecipesResults(recipesData); // Save the produce results in state
+                console.log('recres after', recipesResults);
+                setResultsMessage(`Meklēšanas rezultāti "${produceQuery} ${applianceQuery}":`)
+            }
+            else{
+                setNoResultsMessage(`1 Pēc meklēšanas parametriem "${produceQuery} ${applianceQuery}" nekas netika atrasts`)
+                setResultsMessage('')
+            }         
+            
+    
+        } catch (error) {
+          console.error('Produce /Appliance Error:', error);
+        }
+        console.log('recres.len1', recipesResults.length)
+        if(recipesResults.length === 0){
+            setNoResultsMessage(`2 Pēc meklēšanas parametriem "${produceQuery} ${applianceQuery}" nekas netika atrasts`)
+        }
         
-
-    } catch (error) {
-      console.error('Produce Error:', error);
-    }
-  } else {
-    // Clear produce results if there's no input in the appliance field
-    setProduceResults([]);
-  }
-
-    //================================================
-    const fetchDataAppliances = async () => {
-      
-      // Fetch data based on the searchQuery
-      try {
-      const response = await axios.get('http://localhost/api/public/recipes');
-      // Now you have the data in response.data, which is an object.
-      // You need to convert it to an array of recipes.
-      const recipesArray = Object.values(response.data);
-      setRecipes(recipesArray);
-
-      //
-      const matchingApplianceIDs = [];
-      const lowercaseApplianceTerms = applianceTerms.map(term => term.toLowerCase());
-
-      recipes.forEach((recipe, key) =>{
-        const matchingApplIds = recipe.Appliances
-          .filter((appl, key) => lowercaseApplianceTerms.includes(appl.Name.toLowerCase()))
-          .map((appl, key) => appl.ID)
-
-          matchingApplianceIDs.push(...matchingApplIds)
-      })
-
-      // Remove duplicate IDs (if any)
-    const uniqueMatchingApplianceIDs = [...new Set(matchingApplianceIDs)];
-    appliancesIDs.push(...uniqueMatchingApplianceIDs)
-
-    } catch (error) {
-      console.error('Appliance ID Error:', error);
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    } 
-    };
-      // Build and send a GET request for appliances
-  if (appliance.length > 0) {
-
-    //get appliance ids
-    await fetchDataAppliances()
-
-
-    let applianceURL = `${baseURL}?`;
-    appliancesIDs.forEach(name => {
-      applianceURL += `appliance_id=${name}&`;
-    });
-    if (applianceOnly) {
-      applianceURL += 'appliance_match_strict=true&';
-    }
-    // Remove the trailing '&' if present
-    if (applianceURL.endsWith('&')) {
-      applianceURL = applianceURL.slice(0, -1);
-    }
-
-    try {
-      const applianceResponse = await axios.get(applianceURL);
-      // Handle the response for appliances here
-      const applianceData = Object.values(applianceResponse.data);
-      setApplianceResults(applianceData); // Save the appliance results in state
-
-    } catch (error) {
-      console.error('Appliance Error:', error);
-    }
-  } else {
-    // Clear appliance results if there's no input in the appliance field
-    setApplianceResults([]);
-  }
-
-  // Check for both "no results" and error messages
-  // if (produceResults.length === 0 && applianceResults.length === 0) {
-  //   setNoResultsMessage('Pēc meklēšanas parametriem neviena recepte netika atrasta');
-  // } else {
-  //   setNoResultsMessage('');
-  // }
-
-
     setProduce('');
     setAppliance('');
     setProduceOnly(false);
@@ -188,8 +178,6 @@ function SearchFilter() {
     setProduceIDs([])
     setAppliancesIDs([])
   };//handleSearch
-
-
 
 
   return (
@@ -229,21 +217,21 @@ function SearchFilter() {
         <button onClick={handleSearch}>Meklēt</button>
       </div>
 
-      
+    
+{console.log('recres.len2', recipesResults.length)}
 
-      {/* {noResultsMessage && <p>{noResultsMessage}</p>} */}
-
-      {produceResults.length > 0 && (
+      {recipesResults.length > 0 && (
         <div className='filters'>
           
-          <h2 className='filterTitle2'>Meklēšanas rezultāti pēc produktiem "{produceQuery}":</h2>
+          {/* <h2 className='filterTitle2'>Meklēšanas rezultāti "{produceQuery} {applianceQuery}":</h2> */}
+          {resultsMessage && <h2 className='filterTitle2'>{resultsMessage}</h2>}
 
           {isLoading && <p className='not-success-search'>Ielādē datus...</p>}
           {error && <p className='not-success-search'>Kļūda: {error.message}</p>}
 
           {!isLoading && !error && (
             <div className='filterList'>
-              {produceResults.map((recipe, key) => (
+              {recipesResults.map((recipe, key) => (
               <Link to={`/recipes/${recipe.ID}`} className='filterItem'>
               <RecipeItem
                 key={recipe.ID}
@@ -258,44 +246,14 @@ function SearchFilter() {
           )}
         </div>
       )}
-      {produceResults.length === 0 && (
+      {recipesResults.length === 0 && (
         <div>
-          <h2 className='filterTitle2'>Pēc produktiem "{produceQuery}" nekas netika atrasts</h2>
+          <h2 className='filterTitle2'>{noResultsMessage}</h2>
 
         </div>
       )}
+      
 
-
-      {applianceResults.length > 0 && (
-        <div className='filters'>
-          <h2 className='filterTitle2'>Meklēšanas rezultāti pēc kulinārijas iekārtām "{applianceQuery}"</h2>
-
-          {isLoading && <p className='not-success-search'>Ielādē datus...</p>}
-          {error && <p className='not-success-search'>Kļūda: {error.message}</p>}
-
-          {!isLoading && !error && (
-            <div className='filterList'>
-              {applianceResults.map((recipe, key) => (
-                <Link to={`/recipes/${recipe.ID}`} className='filterItem'>
-                <RecipeItem
-                  key={recipe.ID}
-                  name={recipe.Name}
-                  produce={recipe.Produces}
-                  appliances={recipe.Appliances}
-                />
-                </Link>
-              ))}
-            </div>
-          )}
-          
-        </div>
-      )}
-      {applianceResults.length === 0 && (
-        <div>
-          <h2 className='filterTitle2'>Pēc kulinārijas iekārtām "{applianceQuery}" nekas netika atrasts</h2>
-
-        </div>
-      )}
     </div>
   );
 }
