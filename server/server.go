@@ -218,8 +218,33 @@ func filterRecipes(all map[uint]*food.Recepie, pIDs, aIDs []uint, pMatch, aMatch
 		case aMatch && pMatch && len(tmpP) == len(r.Produces) && len(tmp) == len(r.Appliances):
 			out[r.ID] = r
 		case aMatch && len(tmp) == len(r.Appliances) && !pMatch:
+			var tmp int
+			for _, id := range pIDs {
+				_, ok := produceIDs[id]
+				if ok {
+					tmp++
+				}
+
+			}
+
+			if len(pIDs) != tmp && len(pIDs) > 0 {
+				continue
+			}
+
 			out[r.ID] = r
 		case pMatch && len(tmpP) == len(r.Produces) && !aMatch:
+			var tmp int
+			for _, id := range aIDs {
+				_, ok := appliancesIDs[id]
+				if ok {
+					tmp++
+				}
+			}
+
+			if len(aIDs) != tmp && len(aIDs) > 0 {
+				continue
+			}
+
 			out[r.ID] = r
 		}
 	}

@@ -382,6 +382,128 @@ func Test_filterRecipes(t *testing.T) {
 				},
 			},
 		},
+		{
+			"strict_produce_non_strict_apt",
+			args{
+				map[uint]*food.Recepie{
+					1: {
+						ID: 1,
+						Produces: []*food.Produce{
+							{ID: 1},
+							{ID: 2},
+						},
+						Appliances: []*food.Appliance{
+							{ID: 1},
+							{ID: 2},
+							{ID: 3},
+						},
+					},
+					2: {
+						ID: 2,
+						Produces: []*food.Produce{
+							{ID: 1},
+							{ID: 2},
+						},
+						Appliances: []*food.Appliance{
+							{ID: 4},
+							{ID: 5},
+							{ID: 6},
+						},
+					},
+					3: {
+						ID: 3,
+						Produces: []*food.Produce{
+							{ID: 1},
+							{ID: 2},
+							{ID: 3},
+						},
+						Appliances: []*food.Appliance{
+							{ID: 7},
+							{ID: 12},
+							{ID: 61},
+						},
+					},
+				},
+				[]uint{1, 2},
+				[]uint{1, 2},
+				true,
+				false,
+			},
+			map[uint]*food.Recepie{
+				1: {
+					ID: 1,
+					Produces: []*food.Produce{
+						{ID: 1},
+						{ID: 2},
+					},
+					Appliances: []*food.Appliance{
+						{ID: 1},
+						{ID: 2},
+						{ID: 3},
+					},
+				},
+			},
+		},
+		{
+			"strict_apt_non_strict_prod",
+			args{
+				map[uint]*food.Recepie{
+					1: {
+						ID: 1,
+						Produces: []*food.Produce{
+							{ID: 1},
+							{ID: 2},
+							{ID: 3},
+						},
+						Appliances: []*food.Appliance{
+							{ID: 1},
+							{ID: 2},
+						},
+					},
+					2: {
+						ID: 2,
+						Produces: []*food.Produce{
+							{ID: 4},
+						},
+						Appliances: []*food.Appliance{
+							{ID: 1},
+							{ID: 2},
+						},
+					},
+					3: {
+						ID: 3,
+						Produces: []*food.Produce{
+							{ID: 1},
+							{ID: 2},
+							{ID: 3},
+						},
+						Appliances: []*food.Appliance{
+							{ID: 7},
+							{ID: 12},
+							{ID: 61},
+						},
+					},
+				},
+				[]uint{1, 2},
+				[]uint{1, 2},
+				false,
+				true,
+			},
+			map[uint]*food.Recepie{
+				1: {
+					ID: 1,
+					Produces: []*food.Produce{
+						{ID: 1},
+						{ID: 2},
+						{ID: 3},
+					},
+					Appliances: []*food.Appliance{
+						{ID: 1},
+						{ID: 2},
+					},
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 
