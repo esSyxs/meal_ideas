@@ -4,6 +4,7 @@ import {Link} from "react-router-dom"; //exporting a variable tāpēc {}
 import '../styles/Navbar.css';
 import ReorderIcon from "@mui/icons-material/Reorder";
 import SearchBar from './SearchBar';
+import { useUser } from './UserContext';
 
 
 function Navbar() {
@@ -14,6 +15,8 @@ function Navbar() {
         setOpenLinks(!openLinks);
     };
 
+    const {user} = useUser();
+
 
   return (
     <div className="navbar">
@@ -22,7 +25,11 @@ function Navbar() {
             <div className='hiddenLinks'>
                 <Link to="/recipes"> RECEPTES </Link>
                 <Link to="/about"> PAR </Link>
+                {user.isAuthenticated ? (
+                <Link to="/profile"> PROFILS </Link>
+            ) : (
                 <Link to="/login"> PIERAKSTĪTIES </Link>
+            )}
             </div>
         </div>
         <div className="middleSide" >
@@ -31,7 +38,11 @@ function Navbar() {
         <div className="rightSide">
             <Link to="/recipes"> RECEPTES </Link>
             <Link to="/about"> PAR </Link>
-            <Link to="/login"> PIERAKSTĪTIES </Link>
+            {user.isAuthenticated ? (
+                <Link to="/profile"> PROFILS </Link>
+            ) : (
+                <Link to="/login"> PIERAKSTĪTIES </Link>
+            )}
             <button onClick={toggleNavbar}>
                 <ReorderIcon />
             </button>

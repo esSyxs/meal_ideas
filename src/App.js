@@ -8,6 +8,7 @@ import Contact from "./pages/Contact"
 import SingleRecipe from './pages/SingleRecipe';
 import SearchResults from './pages/SearchResults';
 import SearchFilter from './pages/SearchFilter'
+import Profile from './pages/Profile';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'; //Switch ir noņemts
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -27,6 +28,7 @@ function App() {
           <Route path='/recipes/:id' element={<SingleRecipe />} />
           <Route path='/results' element={<SearchResults />} />
           <Route path='/results/filter' element={<SearchFilter  />} />
+          <Route path='/profile' element={<Profile />} />
         </Routes>
         <Footer />
       </Router>
@@ -36,7 +38,3 @@ function App() {
 }
 
 export default App;
-
-
-
-//<Route path="/" exact component={Home} />

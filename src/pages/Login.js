@@ -12,10 +12,11 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost/api/public/login', {
-        identifier,
-        password,
-      });
+      const data = {
+        email: `${identifier}`,
+        password: `${password}`,
+      }
+      const response = await axios.post('http://localhost/api/public/login', data);
 
       // Assuming your backend returns a token upon successful login
       const token = response.data.token;
@@ -24,6 +25,7 @@ const Login = () => {
       localStorage.setItem('token', token);
 
       // Redirect to the profile page or some other protected route
+
       navigate('/profile');
     } catch (error) {
       // Handle authentication errors (e.g., show an error message)

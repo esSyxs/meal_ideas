@@ -16,7 +16,7 @@
     margin: 10px;
 }
 .search-input::placeholder{
-    color:#ccc;
+    color:#545454;
 }
 
 .search-button{

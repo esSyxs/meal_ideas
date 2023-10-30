@@ -21,17 +21,21 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost/api/public/signup', {
-        email,
-        username,
-        password,
-      });
+      const data = {
+        username: `${username}`,
+        password: `${password}`,
+        email: `${email}`,
+      }
+      const response = await axios.post('http://localhost/api/public/signup', data);
 
       // Assuming your backend returns a success response upon successful registration
-      if (response.data.success) {
-        alert('Reģistrācija veiksmīga!');
+      if (response.status === 200) {
+        alert('Reģistrācija veiksmīga! Ielogojieties, lai sāktu izmantot savu kontu!');
         navigate('/login');
       }
+      else(
+        alert('Reģitrācija nav izdevusies')
+      )
     } catch (error) {
       // Handle registration errors (e.g., show an error message)
       console.error('Reģistrācija nav izdevusies:', error);
