@@ -48,9 +48,123 @@ func setupRouter() *gin.Engine {
 
 	protected := api.Group("/protected").Use(middlewares.Authz())
 	protected.GET("/profile", controllers.Profile)
+	protected.PUT("/profile", updateUser)
+	protected.POST("/favourite", addFavourite)
 
-	// Return the router
 	return r
+}
+
+func updateUser(c *gin.Context) {
+	u := struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+		Email    string `json:"email"`
+	}{}
+
+	err := c.ShouldBindJSON(&u)
+	if err != nil {
+		log.Println(err)
+		c.JSON(400, gin.H{
+			"Error": fmt.Sprintf("Invalid Inputs %s", err.Error()),
+		})
+		c.Abort()
+		return
+	}
+
+	email, found := c.Get("email")
+	if !found {
+		c.JSON(404, gin.H{
+			"Error": "User Not Found",
+		})
+		c.Abort()
+		return
+	}
+
+	user, err := food.GetUser(email.(string))
+	if err != nil {
+		c.JSON(404, gin.H{
+			"Error": "User Not Found",
+		})
+		c.Abort()
+		return
+	}
+
+	if u.Password != "" {
+		err = user.HashPassword(u.Password)
+		if err != nil {
+			log.Println(err.Error())
+			c.JSON(500, gin.H{
+				"Error": "Error Hashing Password",
+			})
+			c.Abort()
+			return
+		}
+	}
+
+	oldEmail := user.Email
+
+	if u.Email != "" {
+		user.Email = u.Email
+	}
+
+	if u.Username != "" {
+		user.Username = u.Username
+	}
+
+	err = food.UpdateUser(user, oldEmail)
+	if err != nil {
+		log.Println(err)
+		c.JSON(500, gin.H{
+			"Error": "Error Updating User",
+		})
+		c.Abort()
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"Message": "Sucessfully Updated",
+	})
+}
+
+func addFavourite(c *gin.Context) {
+	rec_id := struct {
+		ID uint `json:"id"`
+	}{}
+
+	err := c.ShouldBindJSON(&rec_id)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"Error": "Invalid Recipe ID",
+		})
+		c.Abort()
+		return
+	}
+
+	rec, err := food.GetRecepie(rec_id.ID)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"Error": "Recipe Not Found",
+		})
+		c.Abort()
+		return
+	}
+
+	email, found := c.Get("email")
+	if !found {
+		c.JSON(404, gin.H{
+			"Error": "User Not Found",
+		})
+		c.Abort()
+		return
+	}
+
+	food.AddUserRecipe(email.(string), *rec)
+
+	c.JSON(200, gin.H{
+		"Message": "Sucessfully added favourite recipe",
+	})
+
+	c.Abort()
 }
 
 func recpiesGet(c *gin.Context) {

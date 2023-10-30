@@ -89,7 +89,7 @@ func GetRecepie(id uint) (*Recepie, error) {
 
 	_, ok := recepies[id]
 	if !ok {
-		return nil, errors.New("incorrect recepie name")
+		return nil, errors.New("incorrect recepie id")
 	}
 
 	return recepies[id], nil

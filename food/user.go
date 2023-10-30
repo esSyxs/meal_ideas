@@ -77,6 +77,37 @@ func AddUser(u *User) error {
 	return nil
 }
 
+func AddUserRecipe(email string, rec Recepie) error {
+	userMux.Lock()
+	defer userMux.Unlock()
+
+	_, ok := user[email]
+	if !ok {
+		return errors.New("user not found")
+	}
+
+	user[email].FavouriteFood = append(user[email].FavouriteFood, &rec)
+
+	return nil
+}
+
+func UpdateUser(u *User, oldEmail string) error {
+	userMux.Lock()
+	defer userMux.Unlock()
+
+	_, ok := user[u.Email]
+	if ok && u.Email != oldEmail {
+		return errors.New("user already exists")
+	}
+
+	user[u.Email] = u
+	if u.Email != oldEmail {
+		delete(user, oldEmail)
+	}
+
+	return nil
+}
+
 func GetUser(email string) (*User, error) {
 	userMux.Lock()
 	defer userMux.Unlock()
