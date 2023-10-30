@@ -10,7 +10,6 @@ function SearchFilter() {
   const [appliance, setAppliance] = useState('');
   const [produceOnly, setProduceOnly] = useState(false);
   const [applianceOnly, setApplianceOnly] = useState(false);
-  const [noResultsMessage, setNoResultsMessage] = useState('');
   const [resultsMessage, setResultsMessage] = useState('');
   const [recipesResults, setRecipesResults] = useState([]);
   const [produceIDs, setProduceIDs] = useState([]);
@@ -19,8 +18,8 @@ function SearchFilter() {
   const [error, setError] = useState(null);
   const [produceQuery, setProduceQuery] = useState('');
   const [applianceQuery, setApplianceQuery] = useState('')
+  const [noResultsMessage, setNoResultsMessage] = useState('')
 
-  
 
   const baseURL = 'http://localhost:80/api/public/recipes'
 
@@ -41,12 +40,10 @@ function SearchFilter() {
     const produceTerms = produce.split(',').map(term => term.trim());
     const applianceTerms = appliance.split(',').map(term => term.trim());
 
-    console.log('recres before', recipesResults)
-
     setProduceQuery(produce)
     setApplianceQuery(appliance)
 
-
+    
     //get prouduce id
     const fetchData = async () => {
 
@@ -93,6 +90,7 @@ function SearchFilter() {
           appliancesIDs.push(...uniqueMatchingApplianceIDs)
 
           setResultsMessage(`Meklēšanas rezultāti "${produceQuery} ${applianceQuery}":`)
+
       
           } catch (error) {
             console.error('Produce / Appliance ID Error:', error);
@@ -147,18 +145,22 @@ function SearchFilter() {
 
 
         try {
-            console.log('prodidlen', produceIDs.length)
-            console.log('appIDlen', appliancesIDs.length)
             if(produceIDs.length > 0 || appliancesIDs.length > 0){
                 const recipesResponse = await axios.get(sendurl);
                 // Handle the response for produce here
                 const recipesData = Object.values(recipesResponse.data);
-                setRecipesResults(recipesData); // Save the produce results in state
-                console.log('recres after', recipesResults);
+                setRecipesResults(recipesData)
+
+                if(recipesData.length === 0){
+                  setNoResultsMessage(`Pēc meklēšanas parametriem "${produceQuery} ${applianceQuery}" nekas netika atrasts`)
+                }
+                
+
                 setResultsMessage(`Meklēšanas rezultāti "${produceQuery} ${applianceQuery}":`)
+                //setNoResultsMessage('')
             }
             else{
-                setNoResultsMessage(`1 Pēc meklēšanas parametriem "${produceQuery} ${applianceQuery}" nekas netika atrasts`)
+                setNoResultsMessage(`Pēc meklēšanas parametriem "${produceQuery} ${applianceQuery}" nekas netika atrasts`)
                 setResultsMessage('')
             }         
             
@@ -166,9 +168,9 @@ function SearchFilter() {
         } catch (error) {
           console.error('Produce /Appliance Error:', error);
         }
-        console.log('recres.len1', recipesResults.length)
+
         if(recipesResults.length === 0){
-            setNoResultsMessage(`2 Pēc meklēšanas parametriem "${produceQuery} ${applianceQuery}" nekas netika atrasts`)
+            setNoResultsMessage(`Pēc meklēšanas parametriem "${produceQuery} ${applianceQuery}" nekas netika atrasts`)
         }
         
     setProduce('');
@@ -179,16 +181,26 @@ function SearchFilter() {
     setAppliancesIDs([])
   };//handleSearch
 
+  const handleKeyUp = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  
+
 
   return (
     <div className='filterTop'>
       <h1 className='filterTitle'>Padziļinātā meklēšana</h1>
-      <div>
+      <div className='filter-container'>
         <input
           type="text"
           placeholder="Ievadiet produktus, atdalot tos ar komatiem"
           value={produce}
           onChange={(e) => setProduce(e.target.value)}
+          onKeyUp={handleKeyUp}
+          className='filter-input'
         />
         <input
           type="checkbox"
@@ -198,12 +210,14 @@ function SearchFilter() {
         <label>Tikai šie produkti</label>
       </div>
       
-      <div>
+      <div className='filter-container'>
         <input
           type="text"
           placeholder="Ievadiet kulinārijas iekārtas, atdalot tās ar komatiem"
           value={appliance}
           onChange={(e) => setAppliance(e.target.value)}
+          onKeyUp={handleKeyUp}
+          className='filter-input'
         />
         <input
           type="checkbox"
@@ -214,13 +228,13 @@ function SearchFilter() {
       </div>
 
       <div>
-        <button onClick={handleSearch}>Meklēt</button>
+        <button onClick={handleSearch} className='filter-search'>Meklēt</button>
       </div>
 
     
-{console.log('recres.len2', recipesResults.length)}
 
-      {recipesResults.length > 0 && (
+
+      {recipesResults.length > 0 ? (
         <div className='filters'>
           
           {/* <h2 className='filterTitle2'>Meklēšanas rezultāti "{produceQuery} {applianceQuery}":</h2> */}
@@ -245,14 +259,12 @@ function SearchFilter() {
             
           )}
         </div>
-      )}
-      {recipesResults.length === 0 && (
+      ):(
         <div>
           <h2 className='filterTitle2'>{noResultsMessage}</h2>
 
         </div>
-      )}
-      
+      )}      
 
     </div>
   );
