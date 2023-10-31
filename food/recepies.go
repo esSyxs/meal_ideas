@@ -2,7 +2,6 @@ package food
 
 import (
 	"errors"
-	"fmt"
 	"math/rand"
 	"sync"
 	"time"
@@ -13,69 +12,64 @@ var (
 	recepies    map[uint]*Recepie
 	recepiesMux sync.Mutex
 	aplID       autoIncrement
-	appliances  map[string]*Appliance
 	produceID   autoIncrement
-	produce     map[string]*Produce
+
+	produce = map[string]*Produce{
+		"maize":         {uint(produceID.id()), "maize", nil},
+		"sviests":       {uint(produceID.id()), "sviests", nil},
+		"desa":          {uint(produceID.id()), "desa", nil},
+		"siers":         {uint(produceID.id()), "siers", nil},
+		"gurķis":        {uint(produceID.id()), "gurķis", nil},
+		"sīpoli":        {uint(produceID.id()), "sīpoli", nil},
+		"burkāni":       {uint(produceID.id()), "burkāni", nil},
+		"sēnes":         {uint(produceID.id()), "sēnes", nil},
+		"cukini":        {uint(produceID.id()), "cukini", nil},
+		"pētersīļi":     {uint(produceID.id()), "pētersīļi", nil},
+		"rozmarīns":     {uint(produceID.id()), "rozmarīns", nil},
+		"sarkanvīns":    {uint(produceID.id()), "sarkanvīns", nil},
+		"griķi":         {uint(produceID.id()), "griķi", nil},
+		"paprika":       {uint(produceID.id()), "paprika", nil},
+		"kārtainā":      {uint(produceID.id()), "kārtainā", nil},
+		"mīkla":         {uint(produceID.id()), "mīkla", nil},
+		"krēmsiers":     {uint(produceID.id()), "krēmsiers", nil},
+		"persiki":       {uint(produceID.id()), "persiki", nil},
+		"biezpiens":     {uint(produceID.id()), "biezpiens", nil},
+		"cukurs":        {uint(produceID.id()), "cukurs", nil},
+		"olas":          {uint(produceID.id()), "olas", nil},
+		"krējums":       {uint(produceID.id()), "krējums", nil},
+		"milti":         {uint(produceID.id()), "milti", nil},
+		"kartupeļi":     {uint(produceID.id()), "kartupeļi", nil},
+		"fileja vistas": {uint(produceID.id()), "fileja vistas", nil},
+		"spināti":       {uint(produceID.id()), "spināti", nil},
+		"sinepes":       {uint(produceID.id()), "sinepes", nil},
+		"medus":         {uint(produceID.id()), "medus", nil},
+		"ananass":       {uint(produceID.id()), "ananass", nil},
+		"rīsi":          {uint(produceID.id()), "rīsi", nil},
+	}
+
+	appliances = map[string]*Appliance{
+		"nazis":         {uint(aplID.id()), "nazis", nil},
+		"dēlis":         {uint(aplID.id()), "dēlis", nil},
+		"rīve":          {uint(aplID.id()), "rīve", nil},
+		"plīts":         {uint(aplID.id()), "plīts", nil},
+		"panna":         {uint(aplID.id()), "panna", nil},
+		"cepamlāpstiņa": {uint(aplID.id()), "cepamlāpstiņa", nil},
+		"katls":         {uint(aplID.id()), "katls", nil},
+		"cepeškrāsns":   {uint(aplID.id()), "cepeškrāsns", nil},
+		"bļoda":         {uint(aplID.id()), "bļoda", nil},
+		"mīklas rullis": {uint(aplID.id()), "mīklas rullis", nil},
+		"karote":        {uint(aplID.id()), "karote", nil},
+		"krūze":         {uint(aplID.id()), "krūze", nil},
+		"dakša":         {uint(aplID.id()), "dakša", nil},
+		"cepešpanna":    {uint(aplID.id()), "cepešpanna", nil},
+		"gaļas āmurs":   {uint(aplID.id()), "gaļas āmurs", nil},
+	}
 )
 
 func init() {
 	recepies = make(map[uint]*Recepie)
-	appliances = make(map[string]*Appliance)
-	produce = make(map[string]*Produce)
-
-	for i := 1; i <= 10; i++ {
-		name := fmt.Sprintf("Produce %d", i)
-		produce[name] = &Produce{
-			ID:       uint(produceID.id()),
-			Name:     name,
-			Recepies: nil,
-		}
-	}
-
-	for i := 1; i <= 10; i++ {
-		name := fmt.Sprintf("Appliance %d", i)
-		appliances[name] = &Appliance{
-			ID:       uint(aplID.id()),
-			Name:     name,
-			Recepies: nil,
-		}
-	}
-
-	for i := 1; i <= 10; i++ {
-		id := uint(recID.id())
-		recepies[id] = &Recepie{
-			ID:         id,
-			Name:       fmt.Sprintf("Food %d", i),
-			Desciption: fmt.Sprintf("Super tasty %d", i),
-			Users:      nil,
-			Produces:   nil,
-			Appliances: nil,
-		}
-
-		// very bad practice
-		app1 := randInt(1, 3)
-		<-time.After(time.Millisecond)
-		app2 := randInt(4, 7)
-		<-time.After(time.Millisecond)
-		app3 := randInt(8, 10)
-
-		for i := 1; i <= 10; i++ {
-			if i == app1 || i == app2 || i == app3 {
-				recepies[id].Appliances = append(recepies[id].Appliances, appliances[fmt.Sprintf("Appliance %d", i)])
-			}
-		}
-
-		// very bad practice
-		<-time.After(time.Millisecond)
-		app4 := randInt(1, 5)
-		<-time.After(time.Millisecond)
-		app5 := randInt(6, 10)
-
-		for i := 1; i <= 10; i++ {
-			if i == app4 || i == app5 {
-				recepies[id].Produces = append(recepies[id].Produces, produce[fmt.Sprintf("Produce %d", i)])
-			}
-		}
+	for _, r := range rec {
+		recepies[r.ID] = r
 	}
 }
 

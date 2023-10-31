@@ -50,6 +50,7 @@ func setupRouter() *gin.Engine {
 	protected.GET("/profile", controllers.Profile)
 	protected.PUT("/profile", updateUser)
 	protected.POST("/favourite", addFavourite)
+	protected.PUT("/favourite", removeFavourite)
 
 	return r
 }
@@ -163,8 +164,45 @@ func addFavourite(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"Message": "Sucessfully added favourite recipe",
 	})
+}
 
-	c.Abort()
+func removeFavourite(c *gin.Context) {
+	rec_id := struct {
+		ID uint `json:"id"`
+	}{}
+
+	err := c.ShouldBindJSON(&rec_id)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"Error": "Invalid Recipe ID",
+		})
+		c.Abort()
+		return
+	}
+
+	rec, err := food.GetRecepie(rec_id.ID)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"Error": "Recipe Not Found",
+		})
+		c.Abort()
+		return
+	}
+
+	email, found := c.Get("email")
+	if !found {
+		c.JSON(404, gin.H{
+			"Error": "User Not Found",
+		})
+		c.Abort()
+		return
+	}
+
+	food.RemoveUserRecipe(email.(string), *rec)
+
+	c.JSON(200, gin.H{
+		"Message": "Sucessfully removed favourite recipe",
+	})
 }
 
 func recpiesGet(c *gin.Context) {

@@ -16,17 +16,17 @@ var (
 func init() {
 	u1 := &User{
 		ID:            uuid.NewV1(),
-		Username:      "foobar",
+		Username:      "Janis",
 		Password:      "",
-		Email:         "foobar@example.com",
+		Email:         "janis@gmail.com",
 		FavouriteFood: nil,
 	}
 
 	u2 := &User{
 		ID:            uuid.NewV1(),
-		Username:      "foobar2",
+		Username:      "Peteris",
 		Password:      "",
-		Email:         "foobar2@example.com",
+		Email:         "peteris@example.com",
 		FavouriteFood: nil,
 	}
 
@@ -87,6 +87,25 @@ func AddUserRecipe(email string, rec Recepie) error {
 	}
 
 	user[email].FavouriteFood = append(user[email].FavouriteFood, &rec)
+
+	return nil
+}
+
+func RemoveUserRecipe(email string, rec Recepie) error {
+	userMux.Lock()
+	defer userMux.Unlock()
+
+	_, ok := user[email]
+	if !ok {
+		return errors.New("user not found")
+	}
+
+	for i, f := range user[email].FavouriteFood {
+		if f.ID == rec.ID {
+			user[email].FavouriteFood = append(user[email].FavouriteFood[:i], user[email].FavouriteFood[i+1:]...)
+			return nil
+		}
+	}
 
 	return nil
 }
