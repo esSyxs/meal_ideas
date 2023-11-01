@@ -66,7 +66,7 @@ function SearchFilter() {
             recipesArray.forEach((recipe, key) =>{
               if(produce.length > 0){
                   const matchingProdIds = recipe.Produces
-                  .filter((prod, key) => lowercaseProduceTerms.includes(prod.Name.toLowerCase()))
+                  .filter((prod, key) => lowercaseProduceTerms.includes(prod?.Name?.toLowerCase()))
                   .map((prod, key) => prod.ID)
         
                   matchingProduceIDs.push(...matchingProdIds)
@@ -74,7 +74,7 @@ function SearchFilter() {
 
               if (appliance.length > 0) {
                   const matchingApplIds = recipe.Appliances
-                  .filter((appl, key) => lowercaseApplianceTerms.includes(appl.Name.toLowerCase()))
+                  .filter((appl, key) => lowercaseApplianceTerms.includes(appl?.Name?.toLowerCase()))
                   .map((appl, key) => appl.ID)
         
                   matchingApplianceIDs.push(...matchingApplIds)

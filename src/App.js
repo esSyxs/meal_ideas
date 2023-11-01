@@ -38,3 +38,7 @@ function App() {
 }
 
 export default App;
+
+
+
+//<Route path="/" exact component={Home} />

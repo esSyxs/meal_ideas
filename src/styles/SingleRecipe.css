@@ -7,7 +7,7 @@
     flex-direction: column;
     font-family: cursive;
   }
-  .recipes1 .recipeTitle1 {
+  .recipes1 .recipeTitle1{
     font-size: 50px;
   }
   
@@ -19,4 +19,13 @@
   .recipes1 .recipeText1{
     font-size: 20px;
     margin: 40px;
+  }
+
+  .title-button{
+    display: flex;
+    align-items: center;
+  }
+  .title-button .fave-button{
+    color: black;
+    border-radius: 5px;
   }

@@ -1,6 +1,8 @@
 // UserContext.js
 
 import { createContext, useContext, useState } from 'react';
+import { useEffect } from 'react';
+import {jwtDecode} from 'jwt-decode'
 
 const UserContext = createContext();
 
@@ -23,6 +25,35 @@ export function UserProvider({ children }) {
     localStorage.removeItem('token');
     setUser({ isAuthenticated: false, token: '' });
   };
+
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      // Check if the token is expired
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decodedToken = jwtDecode(token); // You may need to install a JWT library
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp < currentTime) {
+          // Token is expired, log the user out
+          logout();
+        }
+      }
+    };
+
+    //Check token expiration on component mount
+    checkTokenExpiration();
+
+    // Set up a timer to periodically check token expiration
+    const tokenCheckInterval = setInterval(() => {
+      checkTokenExpiration();
+    }, 60000); // Check every minute (adjust as needed)
+
+    return () => {
+      // Clear the interval when the component unmounts
+      clearInterval(tokenCheckInterval);
+    };
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, login, logout }}>

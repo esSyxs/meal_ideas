@@ -42,11 +42,11 @@ function SearchResults() {
     return recipes.filter((recipe) => {
       return searchTerms.every((term) =>
         recipe.Name.toLowerCase().includes(term.toLowerCase()) ||
-        recipe.Produces.some((produce) =>
-          produce.Name.toLowerCase().includes(term.toLowerCase())
+        recipe.Produces?.some((produce) =>
+          produce?.Name?.toLowerCase().includes(term.toLowerCase())
         ) ||
-        recipe.Appliances.some((appliances) =>
-        appliances.Name.toLowerCase().includes(term.toLowerCase())
+        recipe.Appliances?.some((appliances) =>
+        appliances?.Name?.toLowerCase().includes(term.toLowerCase())
         )
       );
     });

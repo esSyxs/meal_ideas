@@ -1,0 +1,22 @@
+.user-data {
+    text-align: center;
+    margin: 10px;
+}
+.logout-button{
+    margin-top: 40px;
+    width: 140px;
+    height: 40px;
+    border: none;
+    background-color: #121619;
+    color: whitesmoke;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: cursive;
+}
+
+.not-logged-in{
+    font-size: 20px;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    text-align: center;
+}

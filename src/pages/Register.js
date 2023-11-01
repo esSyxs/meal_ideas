@@ -26,6 +26,8 @@ const Register = () => {
         password: `${password}`,
         email: `${email}`,
       }
+
+      
       const response = await axios.post('http://localhost/api/public/signup', data);
 
       // Assuming your backend returns a success response upon successful registration
