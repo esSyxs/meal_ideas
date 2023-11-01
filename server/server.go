@@ -2,6 +2,7 @@ package server
 
 import (
 	logger "System/Log"
+	mysql "System/db"
 	"System/food"
 	"System/jwt_token_authorization/controllers"
 	"System/jwt_token_authorization/middlewares"
@@ -23,7 +24,21 @@ const (
 	applianceMatch = "appliance_match_strict"
 )
 
-func Start(port string) {
+var (
+	dbUser string
+	dbPsw  string
+	dbUrl  string
+	dbPort string
+	dbName string
+)
+
+func Start(port string, usr, psw, url, dport, db string) {
+	dbUser = usr
+	dbPsw = psw
+	dbUrl = url
+	dbPort = dport
+	dbName = db
+
 	r := setupRouter()
 
 	r.Run(fmt.Sprintf(":%s", port))
@@ -141,7 +156,18 @@ func addFavourite(c *gin.Context) {
 		return
 	}
 
-	rec, err := food.GetRecepie(rec_id.ID)
+	conn, err := mysql.Connect(dbUser, dbPsw, dbUrl, dbPort, dbName)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"Error": fmt.Errorf("failed to create db connection: %s", err.Error()),
+		})
+		c.Abort()
+		return
+	}
+
+	defer conn.Close()
+
+	rec, err := food.GetRecepie(conn, rec_id.ID)
 	if err != nil {
 		c.JSON(404, gin.H{
 			"Error": "Recipe Not Found",
@@ -180,7 +206,18 @@ func removeFavourite(c *gin.Context) {
 		return
 	}
 
-	rec, err := food.GetRecepie(rec_id.ID)
+	conn, err := mysql.Connect(dbUser, dbPsw, dbUrl, dbPort, dbName)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"Error": fmt.Errorf("failed to create db connection: %s", err.Error()),
+		})
+		c.Abort()
+		return
+	}
+
+	defer conn.Close()
+
+	rec, err := food.GetRecepie(conn, rec_id.ID)
 	if err != nil {
 		c.JSON(404, gin.H{
 			"Error": "Recipe Not Found",
@@ -215,8 +252,19 @@ func recpiesGet(c *gin.Context) {
 	produceIDs := query[produceID]
 	applianceIDs := query[applianceID]
 
+	conn, err := mysql.Connect(dbUser, dbPsw, dbUrl, dbPort, dbName)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"Error": fmt.Errorf("failed to create db connection: %s", err.Error()),
+		})
+		c.Abort()
+		return
+	}
+
+	defer conn.Close()
+
 	if len(produceIDs) == 0 && len(applianceIDs) == 0 {
-		c.JSON(200, food.GetRecepies())
+		c.JSON(200, food.GetRecepies(conn))
 		c.Abort()
 		return
 	}
@@ -278,10 +326,7 @@ func recpiesGet(c *gin.Context) {
 		pIDs = append(pIDs, uint(i))
 	}
 
-	fmt.Println("pIds", pIDs)
-	fmt.Println("aIDs", aIDs)
-
-	c.JSON(200, filterRecipes(food.GetRecepies(), pIDs, aIDs, pMatch, aMatch))
+	c.JSON(200, filterRecipes(food.GetRecepies(conn), pIDs, aIDs, pMatch, aMatch))
 }
 
 func recpieGet(c *gin.Context) {
@@ -298,7 +343,18 @@ func recpieGet(c *gin.Context) {
 		return
 	}
 
-	rec, err := food.GetRecepie(uint(i))
+	conn, err := mysql.Connect(dbUser, dbPsw, dbUrl, dbPort, dbName)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"Error": fmt.Errorf("failed to create db connection: %s", err.Error()),
+		})
+		c.Abort()
+		return
+	}
+
+	defer conn.Close()
+
+	rec, err := food.GetRecepie(conn, uint(i))
 	if err != nil {
 		c.JSON(400, gin.H{
 			"Error": err.Error(),

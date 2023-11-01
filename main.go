@@ -2,6 +2,7 @@ package main
 
 import (
 	logger "System/Log"
+	"System/food"
 	"System/server"
 	"flag"
 	"os"
@@ -24,6 +25,7 @@ type DBConf struct {
 	Host     string `yaml:"Host"`
 	Port     string `yaml:"Port"`
 	DBName   string `yaml:"DBName"`
+	Init     bool   `yaml:"Init"`
 }
 
 type Server struct {
@@ -41,7 +43,30 @@ func main() {
 		panic(err)
 	}
 
-	server.Start(Conf.Server.Port)
+	if Conf.Db.Init {
+		err := food.InitDB(
+			Conf.Db.User,
+			Conf.Db.Password,
+			Conf.Db.Host,
+			Conf.Db.Port,
+			Conf.Db.DBName,
+		)
+
+		if err != nil {
+			panic(err)
+		}
+
+		os.Exit(0)
+	}
+
+	server.Start(
+		Conf.Server.Port,
+		Conf.Db.User,
+		Conf.Db.Password,
+		Conf.Db.Host,
+		Conf.Db.Port,
+		Conf.Db.DBName,
+	)
 }
 
 func loadConfig() error {

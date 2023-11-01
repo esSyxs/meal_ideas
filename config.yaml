@@ -1,8 +1,9 @@
 DBConf:
-  User: "admin"
+  User: ""
   Password: ""
-  Host: "127.0.0.1"
-  Port: "3306"
-  DBName: "meal_ideas"
+  Host: ""
+  Port: ""
+  DBName: ""
+  Init: false
 Server:
   Port: "80"
