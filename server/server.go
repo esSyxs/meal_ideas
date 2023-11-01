@@ -278,6 +278,9 @@ func recpiesGet(c *gin.Context) {
 		pIDs = append(pIDs, uint(i))
 	}
 
+	fmt.Println("pIds", pIDs)
+	fmt.Println("aIDs", aIDs)
+
 	c.JSON(200, filterRecipes(food.GetRecepies(), pIDs, aIDs, pMatch, aMatch))
 }
 
@@ -315,6 +318,10 @@ func filterRecipes(all map[uint]*food.Recepie, pIDs, aIDs []uint, pMatch, aMatch
 		produceIDs := map[uint]bool{}
 		appliancesIDs := map[uint]bool{}
 		for _, p := range r.Produces {
+			if p == nil {
+				continue
+			}
+
 			produceIDs[p.ID] = false
 			if inSlice(pIDs, p.ID) {
 				tmpP = append(tmpP, p.ID)
@@ -328,6 +335,10 @@ func filterRecipes(all map[uint]*food.Recepie, pIDs, aIDs []uint, pMatch, aMatch
 		var tmp []uint
 
 		for _, a := range r.Appliances {
+			if a == nil {
+				continue
+			}
+
 			appliancesIDs[a.ID] = false
 			if inSlice(aIDs, a.ID) {
 				tmp = append(tmp, a.ID)

@@ -39,7 +39,7 @@ var (
 		"krējums":       {uint(produceID.id()), "krējums", nil},
 		"milti":         {uint(produceID.id()), "milti", nil},
 		"kartupeļi":     {uint(produceID.id()), "kartupeļi", nil},
-		"fileja vistas": {uint(produceID.id()), "fileja vistas", nil},
+		"vistas fileja": {uint(produceID.id()), "vistas fileja", nil},
 		"spināti":       {uint(produceID.id()), "spināti", nil},
 		"sinepes":       {uint(produceID.id()), "sinepes", nil},
 		"medus":         {uint(produceID.id()), "medus", nil},
