@@ -3,7 +3,7 @@ DBConf:
   Password: ""
   Host: ""
   Port: ""
-  DBName: ""
+  DBName: "meal_deals"
   Init: false
 Server:
   Port: "80"

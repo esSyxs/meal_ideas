@@ -240,7 +240,7 @@ func GetRecepies(conn *sql.DB) map[uint]*Recepie {
 		out[uint(i)] = &Recepie{
 			ID:         uint(i),
 			Name:       r["Name"],
-			Desciption: r["Desciption"],
+			Desciption: r["Description"],
 			Users:      nil,
 			Appliances: tmpApliences,
 			Produces:   tmpProduce,
@@ -329,7 +329,7 @@ func GetRecepie(conn *sql.DB, id uint) (*Recepie, error) {
 		return &Recepie{
 			ID:         uint(i),
 			Name:       r["Name"],
-			Desciption: r["Desciption"],
+			Desciption: r["Description"],
 			Users:      nil,
 			Appliances: tmpApliences,
 			Produces:   tmpProduce,
